@@ -5,10 +5,6 @@ core real-time operating system (RTOS) concepts — task states, priority-based
 scheduling with starvation prevention, and a hardware abstraction layer (HAL)
 for common embedded protocols (UART, I2C, SPI).
 
-Built as a learning/portfolio project targeting embedded software roles that
-require RTOS familiarity, OOP-based embedded design, and protocol-level
-driver interfacing.
-
 ---
 
 ## Objective
