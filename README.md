@@ -180,17 +180,7 @@ make run
 
 ---
 
-## Challenges & What I Learned
 
-During development, the initial priority scheduler caused **task
-starvation** — the highest-priority task ran on every tick, and lower-
-priority tasks never executed. I diagnosed this by tracing scheduler
-selection logic tick-by-tick and fixed it by implementing **priority
-aging**, a technique used in real RTOS schedulers to guarantee fairness
-without discarding priority semantics. This also surfaced a subtle sign
-error (`+` instead of `-` in the aging formula) and a missing state-reset
-bug, both fixed after tracing actual vs. expected output — a good example
-of debugging scheduling logic the way you would on real embedded firmware.
 
 ---
 
