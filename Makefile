@@ -31,4 +31,21 @@ clean:
 #build and immediately run the program
 run: all
 	./$(TARGET)
-.PHONY: all clean run
+
+#unit / regression tests (no external framework)
+TEST_TARGET := $(BUILD_DIR)/test_scheduler
+$(TEST_TARGET): tests/test_scheduler.cpp $(SRC_DIR)/Task.cpp $(SRC_DIR)/Scheduler.cpp | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
+
+#starvation before/after comparison (aging on vs aging off)
+COMPARE_TARGET := $(BUILD_DIR)/compare_aging
+$(COMPARE_TARGET): tools/compare_aging.cpp $(SRC_DIR)/Task.cpp $(SRC_DIR)/Scheduler.cpp | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+compare: $(COMPARE_TARGET)
+	./$(COMPARE_TARGET)
+
+.PHONY: all clean run test compare
