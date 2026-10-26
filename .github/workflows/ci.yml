@@ -1,0 +1,32 @@
+name: build-and-test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build simulation (strict warnings)
+        run: >
+          g++ -std=c++17 -Wall -Wextra -Wpedantic -Werror -Iinclude
+          src/Task.cpp src/Scheduler.cpp src/main.cpp -o rtos_scheduler
+
+      - name: Unit / regression tests
+        run: |
+          mkdir -p build
+          g++ -std=c++17 -Wall -Wextra -Wpedantic -Werror -Iinclude \
+            src/Task.cpp src/Scheduler.cpp tests/test_scheduler.cpp \
+            -o build/test_scheduler
+          ./build/test_scheduler
+
+      - name: Starvation before/after comparison
+        run: |
+          g++ -std=c++17 -Wall -Wextra -Wpedantic -Werror -Iinclude \
+            src/Task.cpp src/Scheduler.cpp tools/compare_aging.cpp \
+            -o build/compare_aging
+          ./build/compare_aging
