@@ -1,7 +1,8 @@
 #include <iostream>
 #include "Scheduler.h"
 
-Scheduler::Scheduler() : tickCount_(0) {
+Scheduler::Scheduler(int agingRatePerTick)
+    : tickCount_(0), agingRatePerTick_(agingRatePerTick) {
 }
 
 void Scheduler::addTask(Task* task) {
@@ -15,7 +16,9 @@ int Scheduler::selectNextTask() {
     for (size_t i = 0; i < tasks_.size(); i++) {
         Task* t = tasks_[i];
         if (t->getState() == TaskState::READY) {
-            int effectivePriority = t->getPriority() - waitTicks_[i];
+            //aging: effective priority improves by agingRatePerTick per tick waited
+            //agingRatePerTick = 0 disables aging (pure fixed priority -> starvation)
+            int effectivePriority = t->getPriority() - agingRatePerTick_ * waitTicks_[i];
             if (effectivePriority < bestPriority) {
                 bestPriority = effectivePriority;
                 bestIndex = static_cast<int>(i);
